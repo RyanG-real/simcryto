@@ -1,0 +1,56 @@
+# CryptoSim - คำสั่งเปิดแอป
+
+เปิด PowerShell แล้วเข้าโฟลเดอร์โปรเจกต์:
+
+cd C:\Users\ADMIN\Desktop\simcryto
+
+
+ติดตั้ง dependencies (ใช้ครั้งแรกหรือหลังแก้ pubspec.yaml):
+
+C:\flutter\bin\flutter.bat pub get
+
+
+==================================================
+เปิดบน Android Emulator
+==================================================
+
+1. เปิด Emulator:
+
+C:\Users\ADMIN\AppData\Local\Android\sdk\emulator\emulator.exe -avd Pixel_8
+
+2. ตรวจสอบรหัสอุปกรณ์:
+
+C:\flutter\bin\flutter.bat devices
+
+3. เปิดแอปบน Android:
+
+C:\flutter\bin\flutter.bat run -d emulator-5554 --dart-define-from-file=config/supabase.local.json
+
+หมายเหตุ: ถ้ารหัสไม่ใช่ emulator-5554 ให้นำรหัสจากคำสั่ง flutter devices มาแทน
+
+
+==================================================
+เปิดบนเว็บ Chrome
+==================================================
+
+C:\flutter\bin\flutter.bat run -d chrome --web-port=3000 --dart-define-from-file=config/supabase.local.json
+
+เปิดเว็บที่: http://localhost:3000
+
+
+==================================================
+ปุ่มคำสั่งระหว่างแอปทำงาน
+==================================================
+
+r = Hot Reload
+R = Hot Restart
+d = ปลดการเชื่อมต่อ แต่ปล่อยแอปเปิดไว้
+q = ปิดแอป
+
+
+==================================================
+ตรวจโค้ดและ Tests
+==================================================
+
+C:\flutter\bin\flutter.bat analyze
+C:\flutter\bin\flutter.bat test
