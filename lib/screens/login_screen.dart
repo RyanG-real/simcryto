@@ -86,6 +86,7 @@ class LoginScreen extends StatelessWidget {
                           child: const Text('Try Demo'),
                         ),
                       ),
+                      
                     ],
                   ),
                 ),
@@ -119,11 +120,11 @@ class _BenefitCard extends StatelessWidget {
     ),
     child: const Column(
       children: [
-        _Benefit(icon: '💰', text: 'เริ่มลุยด้วยทุนจำลอง \$10,000'),
+        _Benefit(icon: '💰', text: 'Start with \$10,000 virtual cash'),
         SizedBox(height: 16),
-        _Benefit(icon: '📈', text: 'จับจังหวะตลาดด้วยราคาคริปโตจริง'),
+        _Benefit(icon: '📈', text: 'Live prices from CoinGecko'),
         SizedBox(height: 16),
-        _Benefit(icon: '🔒', text: 'ซ้อมให้สุด โดยไม่เสี่ยงเงินจริง'),
+        _Benefit(icon: '🔒', text: 'No real money ever at risk'),
       ],
     ),
   );

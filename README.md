@@ -1,16 +1,17 @@
 # CryptoSim
 
-Flutter MVP for a crypto paper-trading app. The current build is UI-first and uses in-memory demo data so every screen and trade interaction can be tested before connecting external services.
+Flutter crypto paper-trading app for Android, iOS and web. It uses Supabase for authentication and portfolio storage, with server-side trade execution and live CoinGecko market data. When Supabase is not configured, the app can still run with local in-memory data for development and tests.
 
 ## Included
 
-- Google/Demo entry screen (Google button is currently a UI stub)
+- Google OAuth and anonymous Demo authentication through Supabase Auth
 - Portfolio balance, holdings and P&L
-- Searchable market list with sparklines
+- Top-100 searchable market list with live prices and sparklines
 - Buy/sell sheet with percentage shortcuts and validation
-- Average-cost calculation and synchronized trade history
+- Atomic server-side buy/sell execution, average-cost calculation and synchronized trade history
 - Dark/light themes, account reset and logout
-- Supabase schema, RLS and trusted atomic trade function
+- Supabase PostgreSQL schema, RLS policies and trusted RPC functions
+- CoinGecko requests proxied through Supabase Edge Functions so API secrets are not shipped in the app
 
 ## Run
 
@@ -18,7 +19,7 @@ Flutter is installed at `C:\flutter` on the current machine but is not yet visib
 
 ```powershell
 & 'C:\flutter\bin\flutter.bat' pub get
-& 'C:\flutter\bin\flutter.bat' run
+& 'C:\flutter\bin\flutter.bat' run --dart-define-from-file=config/supabase.local.json
 ```
 
 ## Backend connection
@@ -34,6 +35,7 @@ supabase login
 supabase link --project-ref YOUR_PROJECT_REF
 supabase secrets set COINGECKO_DEMO_API_KEY=YOUR_KEY
 supabase functions deploy execute-trade
+supabase functions deploy market-data
 ```
 
 6. Run with the local configuration:
@@ -42,6 +44,15 @@ supabase functions deploy execute-trade
 & 'C:\flutter\bin\flutter.bat' run --dart-define-from-file=config/supabase.local.json
 ```
 
-When configured, Auth, portfolio reads, history, reset and trade execution use Supabase. Without the file, the app keeps working in local mock mode.
+When configured, authentication, portfolio reads, history, reset, live market data and trade execution use Supabase. Without the file, the app keeps working in local mock mode.
+
+## Tests
+
+```powershell
+& 'C:\flutter\bin\flutter.bat' analyze
+& 'C:\flutter\bin\flutter.bat' test
+```
+
+The test suite covers login state, buying, selling, balance validation, account reset and the demo navigation flow.
 
 Never ship a CoinGecko secret or a Supabase service-role key inside the Flutter app.

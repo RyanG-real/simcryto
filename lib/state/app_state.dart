@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -200,9 +201,11 @@ class AppState extends ChangeNotifier {
         );
       }
       return null;
-    } on AuthException catch (error) {
+    } on AuthException catch (error, stackTrace) {
+      _logError('sign in', error, stackTrace);
       return error.message;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      _logError('sign in', error, stackTrace);
       return 'Could not sign in: $error';
     }
   }
@@ -268,7 +271,8 @@ class AppState extends ChangeNotifier {
           ),
         );
       notifyListeners();
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _logError('refresh portfolio', error, stackTrace);
       // Keep the last known portfolio while the network is unavailable.
     }
   }
@@ -324,9 +328,11 @@ class AppState extends ChangeNotifier {
           body['fetchedAt'] as String? ?? '',
         );
       }
-    } on FunctionException catch (error) {
+    } on FunctionException catch (error, stackTrace) {
+      _logError('refresh market', error, stackTrace);
       marketError = error.reasonPhrase ?? 'Market refresh failed';
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _logError('refresh market', error, stackTrace);
       marketError = 'Market refresh failed';
     } finally {
       isMarketRefreshing = false;
@@ -447,13 +453,15 @@ class AppState extends ChangeNotifier {
       );
       await refreshPortfolio();
       return null;
-    } on FunctionException catch (error) {
+    } on FunctionException catch (error, stackTrace) {
+      _logError('execute ${side.name} trade', error, stackTrace);
       final details = error.details;
       if (details is Map && details['error'] is String) {
         return details['error'] as String;
       }
       return error.reasonPhrase ?? 'Trade request failed';
-    } catch (error) {
+    } catch (error, stackTrace) {
+      _logError('execute ${side.name} trade', error, stackTrace);
       return 'Trade request failed: $error';
     }
   }
@@ -468,6 +476,15 @@ class AppState extends ChangeNotifier {
       transactions.clear();
       notifyListeners();
     }
+  }
+
+  void _logError(String operation, Object error, StackTrace stackTrace) {
+    developer.log(
+      '$operation failed',
+      name: 'cryptosim.AppState',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 
   @override
